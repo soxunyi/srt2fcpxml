@@ -27,7 +27,7 @@ $ ./srt2fcpxml
   -h int 
         分辨率高 (default 1080)
   -line string
-        每行字幕连接的符号 当传\\n字符时会进行字幕的换行（default - ）
+        如果单条字幕有多行，行和行之间以line进行拼接 当传\\n字符时会以换行符进行拼接（default - ）
 ```
 
 执行

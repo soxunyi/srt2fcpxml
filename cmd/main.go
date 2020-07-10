@@ -15,7 +15,7 @@ func main() {
 	frameDuration := flag.Int("fd", 25, "帧率目前只支持整数24、25、30、50、60 (default 25)")
 	width := flag.Int("w", 1920, "分辨率宽 (default 1920)")
 	height := flag.Int("h", 1080, "分辨率高 (default 1080)")
-	lineBreak := flag.String("line", " - ", "换行符 (default  - )")
+	lineBreak := flag.String("line", " - ", "如果单条字幕有多行，行和行之间以line进行拼接 当传\\\\n字符时会以换行符进行拼接 (default - )")
 	flag.Parse()
 	*lineBreak = strings.Replace(string(*lineBreak), "\\n", "\n", -1 )
 	f, _ := astisub.OpenFile(*srtFile)
