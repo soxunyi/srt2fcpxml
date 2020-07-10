@@ -152,7 +152,7 @@ var (
 	frameDuration int
 )
 
-func Srt2FcpxmlExport(projectName string, fd int, subtitles *astisub.Subtitles) ([]byte, error) {
+func Srt2FcpxmlExport(projectName string, fd int, width int, height int, lineBreak string, subtitles *astisub.Subtitles) ([]byte, error) {
 	frameDuration = fd
 	result := Fcpxml{}
 	result.Version = "1.7"
@@ -160,8 +160,8 @@ func Srt2FcpxmlExport(projectName string, fd int, subtitles *astisub.Subtitles) 
 		ID:            "r1",
 		Name:          fmt.Sprintf("%s%dp%d", "FFVideoFormat", 1080, frameDuration),
 		FrameDuration: fmt.Sprintf("%d/%ds", 100, 100*frameDuration),
-		Width:         "1920",
-		Height:        "1080",
+		Width:         strconv.Itoa(width),
+		Height:        strconv.Itoa(height),
 		ColorSpace:    "1-1-1 (Rec. 709)",
 	}
 	result.Resources.Effect = effect{
@@ -191,11 +191,11 @@ func Srt2FcpxmlExport(projectName string, fd int, subtitles *astisub.Subtitles) 
 	result.Library.Event.Project.Sequence.Spine.Gap.Offset = "0s"
 	result.Library.Event.Project.Sequence.Spine.Gap.Duration = fmt.Sprintf("%vs", lib.Round(subtitles.Duration().Seconds(), 0))
 	result.Library.Event.Project.Sequence.Spine.Gap.Start = fmt.Sprintf("%ds", startTime)
-	result.Library.Event.Project.Sequence.Spine.Gap.Title = texts(subtitles.Items)
+	result.Library.Event.Project.Sequence.Spine.Gap.Title = texts(subtitles.Items, lineBreak)
 	return xml.MarshalIndent(result, "", "    ")
 }
 
-func texts(subtitles []*astisub.Item) []title {
+func texts(subtitles []*astisub.Item, lineBreak string) []title {
 	var stitles []title
 	for index, item := range subtitles {
 		title := title{
@@ -219,7 +219,7 @@ func texts(subtitles []*astisub.Item) []title {
 			}{TextStyle: struct {
 				Text string `xml:",chardata"`
 				Ref  string `xml:"ref,attr"`
-			}{Text: processLines(item), Ref: fmt.Sprintf("ts%d", index+1)}},
+			}{Text: processLines(item, lineBreak), Ref: fmt.Sprintf("ts%d", index+1)}},
 			TextStyleDef: struct {
 				Text      string `xml:",chardata"`
 				ID        string `xml:"id,attr"`
@@ -263,10 +263,10 @@ func texts(subtitles []*astisub.Item) []title {
 	return stitles
 }
 
-func processLines(i *astisub.Item) string {
+func processLines(i *astisub.Item, lineBreak string) string {
 	var os []string
 	for _, l := range i.Lines {
 		os = append(os, l.String())
 	}
-	return strings.Join(os, "\n")
+	return strings.Join(os, lineBreak)
 }
