@@ -22,6 +22,12 @@ $ ./srt2fcpxml
     	帧率目前只支持整数24、25、30、50、60 (default 25)
   -srt string
     	srt 字幕文件
+  -w int
+        分辨率宽 (default 1920)
+  -h int 
+        分辨率高 (default 1080)
+  -line string
+        每行字幕连接的符号 当传\\n字符时会进行字幕的换行（default - ）
 ```
 
 执行
