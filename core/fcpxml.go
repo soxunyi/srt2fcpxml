@@ -219,7 +219,7 @@ func texts(subtitles []*astisub.Item) []title {
 			}{TextStyle: struct {
 				Text string `xml:",chardata"`
 				Ref  string `xml:"ref,attr"`
-			}{Text: String2(item), Ref: fmt.Sprintf("ts%d", index+1)}},
+			}{Text: processLines(item), Ref: fmt.Sprintf("ts%d", index+1)}},
 			TextStyleDef: struct {
 				Text      string `xml:",chardata"`
 				ID        string `xml:"id,attr"`
@@ -263,7 +263,7 @@ func texts(subtitles []*astisub.Item) []title {
 	return stitles
 }
 
-func String2(i *astisub.Item) string {
+func processLines(i *astisub.Item) string {
 	var os []string
 	for _, l := range i.Lines {
 		os = append(os, l.String())
